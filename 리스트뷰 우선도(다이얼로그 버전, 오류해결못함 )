@@ -1,0 +1,78 @@
+package org.androidtown.my_firstapp;
+
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.nfc.Tag;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class TodayWorkActivity extends AppCompatActivity {
+    private ArrayList<String> LIST_MENU;
+    ListView listview;
+    ArrayAdapter adapter;
+    EditText input;
+    EditText et;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_today_work);
+        final String[] items = {"LIST1","LIST2","LIST3"};
+        LIST_MENU = new ArrayList<>(Arrays.asList(items));
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,LIST_MENU);
+        listview = (ListView) findViewById(R.id.listview);
+        listview.setAdapter(adapter);
+        listview.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        input = findViewById(R.id.editText3);
+
+        //다이얼로그
+        final AlertDialog.Builder builder = new AlertDialog.Builder(TodayWorkActivity.this);
+        builder.setTitle("우선도");
+
+        et = new EditText(TodayWorkActivity.this);
+        builder.setView(et);
+
+        //다이얼로그 확인버튼 이벤트 처리
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+               String text = et.getText().toString();
+               Toast.makeText(getApplicationContext(),text,Toast.LENGTH_LONG).show();
+            }
+        });
+
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int witch) {
+            }
+        });
+        //리스트뷰 클릭 이벤트 처리
+       listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+           @Override
+           public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                //Toast.makeText(getApplicationContext(),items[position],Toast.LENGTH_SHORT).show();
+               builder.show();
+
+           }
+       });
+    }
+    public void onAddButtonClicked(View v){
+        String text;
+        text = (String) input.getText().toString();
+        LIST_MENU.add(text);
+        adapter.notifyDataSetChanged();
+    }
+}
